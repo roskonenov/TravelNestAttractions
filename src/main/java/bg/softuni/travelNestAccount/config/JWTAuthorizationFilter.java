@@ -6,7 +6,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,19 +25,19 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        String header = response.getHeader(HttpHeaders.AUTHORIZATION);
-
-        if (header == null || header.isBlank() || !header.startsWith("Bearer ")) {
+        String jwtToken = request.getParameter("token");
+        if (jwtToken == null ||
+                jwtToken.isBlank()){
             filterChain.doFilter(request, response);
             return;
         }
-        String jwtToken = header.substring(7);
-        UserDetails userDetails = jwtService.extractUserDetails(jwtToken);
 
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            SecurityContext context = SecurityContextHolder.getContext();
+            UserDetails userDetails = jwtService.extractUserDetails(jwtToken);
 
-            context.setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities()));
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+            SecurityContext context = SecurityContextHolder.getContext();
+            context.setAuthentication(authentication);
             SecurityContextHolder.setContext(context);
         }
         filterChain.doFilter(request, response);

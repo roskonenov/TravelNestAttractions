@@ -29,14 +29,18 @@ public class JWTServiceImpl implements JWTService {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
-                .parseClaimsJwt(jwtToken)
+                .parseClaimsJws(jwtToken)
                 .getBody();
 
         List<String> roles = getRoles(claims);
+        String username = getUsername(claims);
 
-        return new User(claims.get("username", String.class),
-                "",
+        return new User(username, "",
                 roles.stream().map(SimpleGrantedAuthority::new).toList());
+    }
+
+    private String getUsername(Claims claims) {
+        return claims.get("username", String.class);
     }
 
     @SuppressWarnings("unchecked")
