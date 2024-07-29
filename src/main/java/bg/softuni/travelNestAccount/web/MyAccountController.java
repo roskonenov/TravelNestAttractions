@@ -20,12 +20,7 @@ public class MyAccountController {
 
     @GetMapping("/redirect")
     public String redirect(){
-        return "redirect:/my-account";
-    }
-
-    @GetMapping("/my-account")
-    public String showMyAccount(){
-        SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(SecurityContextHolder.getContext().getAuthentication());
         return "my_account";
     }
 }
