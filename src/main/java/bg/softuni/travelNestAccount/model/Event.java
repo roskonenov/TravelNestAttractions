@@ -20,14 +20,14 @@ public class Event extends Attraction {
     @Column(insertable = false, updatable = false)
     private String type;
 
-    @Column(nullable = false, name = "start_date")
+    @Column(name = "start_date")
     private LocalDate startDate;
 
-    @Column(nullable = false, name = "end_date")
+    @Column(name = "end_date")
     private LocalDate endDate;
 
-    public Event(String title, CityEntity city, String address, BigDecimal price, String pictureUrl, boolean isPaid, LocalDate startDate, LocalDate endDate) {
-        super(title, city, address, price, pictureUrl, isPaid);
+    public Event(String title, CityEntity city, String address, BigDecimal price, String pictureUrl,String description, boolean isPaid, LocalDate startDate, LocalDate endDate) {
+        super(title, city, address, price, pictureUrl,description, isPaid);
         setType(type);
         this.startDate = startDate;
         this.endDate = endDate;

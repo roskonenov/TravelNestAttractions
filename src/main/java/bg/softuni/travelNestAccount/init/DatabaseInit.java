@@ -1,7 +1,9 @@
 package bg.softuni.travelNestAccount.init;
 
+import bg.softuni.travelNestAccount.model.Attraction;
 import bg.softuni.travelNestAccount.model.CityEntity;
 import bg.softuni.travelNestAccount.model.enums.City;
+import bg.softuni.travelNestAccount.repository.AttractionRepository;
 import bg.softuni.travelNestAccount.repository.CityRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -10,13 +12,17 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 
 @Component
 @RequiredArgsConstructor
 public class DatabaseInit implements CommandLineRunner {
 
-    private static final String HOUSING_INPUT_FILE_PATH = "src/main/resources/static/housing.txt";
+    private static final String ATTRACTIONS_INPUT_FILE_PATH = "src/main/resources/attractions.txt";
     
     private static final String CAR_INPUT_FILE_PATH = "src/main/resources/static/car.txt";
     
@@ -25,14 +31,15 @@ public class DatabaseInit implements CommandLineRunner {
     private final CityRepository cityRepository;
 
     private final PasswordEncoder passwordEncoder;
+    private final AttractionRepository attractionRepository;
 
 
     @Override
-    public void run(String... args) {
+    public void run(String... args) throws IOException {
         cityInit();
 //        rolesInit();
 //        usersInit();
-//        housingInit();
+        attractionsInit();
 //        carInit();
         LOGGER.info("DATABASE INITIATED!");
     }
@@ -85,15 +92,15 @@ public class DatabaseInit implements CommandLineRunner {
 //        );
 //    }
 //
-//    private void housingInit() throws IOException {
-//        if (housingRepository.count() != 0) return;
-//
-//        Files.readAllLines(Path.of(HOUSING_INPUT_FILE_PATH))
-//                .forEach(line -> {
-//                    String[] fields = line.split("\\s+");
-//                    housingRepository.saveAndFlush(createHousingEntity(fields));
-//                });
-//    }
+    private void attractionsInit() throws IOException {
+        if (attractionRepository.count() != 0) return;
+
+        Files.readAllLines(Path.of(ATTRACTIONS_INPUT_FILE_PATH))
+                .forEach(line -> {
+                    String[] fields = line.split("\\s+");
+                    attractionRepository.saveAndFlush(createAttractionEntity(fields));
+                });
+    }
 //
 //    private void carInit() throws IOException {
 //        if (carRepository.count() != 0) return;
@@ -105,17 +112,18 @@ public class DatabaseInit implements CommandLineRunner {
 //                });
 //    }
 //
-//    private Housing createHousingEntity(String[] fields) {
-//        return new Housing(
-//                HousingType.valueOf(fields[0]),
-//                cityRepository.findByName(getPropperString(fields[1])),
-//                getPropperString(fields[2]),
-//                BigDecimal.valueOf(Integer.parseInt(fields[3])),
-//                Integer.parseInt(fields[4]),
-//                Integer.parseInt(fields[5]),
-//                fields[6],
-//                userRepository.findByUsername(fields[7]).get());
-//    }
+    private Attraction createAttractionEntity(String[] fields) {
+        return new Attraction(
+                getProperString(fields[0]),
+                cityRepository.findByName(getProperString(fields[1])),
+                getProperString(fields[2]),
+                fields[3].equals("null") ? null :
+                BigDecimal.valueOf(Integer.parseInt(fields[3])),
+                fields[4],
+                getProperString(fields[5]),
+                Boolean.parseBoolean(fields[6])
+        );
+    }
 //
 //    private Car createCarEntity(String[] fields) {
 //        return new Car(
@@ -130,7 +138,7 @@ public class DatabaseInit implements CommandLineRunner {
 //                Integer.parseInt(fields[8]));
 //    }
 //
-//    private static String getPropperString(String text) {
-//        return text.replaceAll("_", " ");
-//    }
+    private static String getProperString(String text) {
+        return text.replaceAll("_", " ");
+    }
 }

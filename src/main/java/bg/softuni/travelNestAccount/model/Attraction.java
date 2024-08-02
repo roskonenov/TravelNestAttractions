@@ -43,13 +43,14 @@ public class Attraction extends BaseEntityUuid {
     @Column(nullable = false)
     private boolean isPaid;
 
-    public Attraction(String title, CityEntity city, String address, BigDecimal price, String pictureUrl, boolean isPaid) {
+    public Attraction(String title, CityEntity city, String address, BigDecimal price, String pictureUrl, String description, boolean isPaid) {
         setType(type);
         this.title = title;
         this.city = city;
         this.address = address;
         this.price = price;
         this.pictureUrl = pictureUrl;
+        this.description = description;
         this.isPaid = isPaid;
     }
 }
