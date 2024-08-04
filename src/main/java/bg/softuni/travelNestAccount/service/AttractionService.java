@@ -17,4 +17,8 @@ public interface AttractionService {
     TicketDTO getTickets(UUID attractionId, UserDetails userDetails);
 
     void buyTickets(UUID attractionId, TicketDTO ticketDTO);
+
+    AttractionDTO createAttraction(AttractionDTO attractionDTO);
+
+    void deleteById(UUID attractionId, UserDetails userDetails);
 }

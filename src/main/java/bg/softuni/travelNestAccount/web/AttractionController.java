@@ -53,4 +53,20 @@ public class AttractionController {
         attractionService.buyTickets(attractionId, ticketDTO);
 
     }
+
+    @PostMapping("/add")
+    public ResponseEntity<AttractionDTO> addAttraction(
+            @RequestBody AttractionDTO attractionDTO
+    ){
+        return ResponseEntity.ok(attractionService.createAttraction(attractionDTO));
+    }
+
+    @DeleteMapping("/delete/{uuid}")
+    public ResponseEntity<AttractionDTO> deleteAttraction(@PathVariable("uuid") UUID attractionId,
+                                                          @AuthenticationPrincipal UserDetails userDetails){
+        attractionService.deleteById(attractionId, userDetails);
+       return ResponseEntity
+               .noContent()
+               .build();
+    }
 }

@@ -42,7 +42,7 @@ public class Attraction extends BaseEntityUuid {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false)
+    @Column(name = "is_paid", nullable = false)
     private boolean isPaid;
 
     @OneToMany(mappedBy = "attraction")
@@ -58,5 +58,10 @@ public class Attraction extends BaseEntityUuid {
         this.description = description;
         this.isPaid = isPaid;
         this.tickets = new HashSet<>();
+    }
+
+    public Attraction setCity(CityEntity city) {
+        this.city = city;
+        return this;
     }
 }

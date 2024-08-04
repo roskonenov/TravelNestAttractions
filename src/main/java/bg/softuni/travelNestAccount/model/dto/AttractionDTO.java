@@ -27,4 +27,9 @@ public class AttractionDTO {
     private String description;
 
     private boolean isPaid;
+
+    public AttractionDTO setCityName(String cityName) {
+        this.cityName = cityName;
+        return this;
+    }
 }

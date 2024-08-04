@@ -3,10 +3,13 @@ package bg.softuni.travelNestAccount.service.impl;
 import bg.softuni.travelNestAccount.exception.ObjectNotFoundException;
 import bg.softuni.travelNestAccount.model.dto.AttractionDTO;
 import bg.softuni.travelNestAccount.model.dto.TicketDTO;
+import bg.softuni.travelNestAccount.model.entity.Attraction;
 import bg.softuni.travelNestAccount.model.entity.Ticket;
 import bg.softuni.travelNestAccount.repository.AttractionRepository;
+import bg.softuni.travelNestAccount.repository.CityRepository;
 import bg.softuni.travelNestAccount.repository.TicketRepository;
 import bg.softuni.travelNestAccount.service.AttractionService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -15,16 +18,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class AttractionServiceImpl implements AttractionService {
     private final AttractionRepository attractionRepository;
     private final ModelMapper modelMapper;
     private final TicketRepository ticketRepository;
-
-    public AttractionServiceImpl(AttractionRepository attractionRepository, ModelMapper modelMapper, TicketRepository ticketRepository) {
-        this.attractionRepository = attractionRepository;
-        this.modelMapper = modelMapper;
-        this.ticketRepository = ticketRepository;
-    }
+    private final CityRepository cityRepository;
 
     @Override
     public List<AttractionDTO> getAllAttractions() {
@@ -69,4 +68,28 @@ public class AttractionServiceImpl implements AttractionService {
                 .setAttraction(attractionRepository.findById(attractionId)
                         .orElseThrow(ObjectNotFoundException::new)));
     }
+
+    @Override
+    public AttractionDTO createAttraction(AttractionDTO attractionDTO) {
+        Attraction attraction = attractionRepository.saveAndFlush(
+                modelMapper.map(attractionDTO, Attraction.class)
+                        .setCity(cityRepository.findByName(attractionDTO.getCityName())));
+
+        return modelMapper.map(attraction, AttractionDTO.class)
+                .setCityName(attraction.getCity().getName());
+    }
+
+    @Override
+    public void deleteById(UUID attractionId, UserDetails userDetails) {
+        if (userDetails.getAuthorities()
+                .stream()
+                .noneMatch(grantedAuthority -> grantedAuthority
+                        .getAuthority()
+                        .equals("ROLE_ADMIN"))) return;
+
+        ticketRepository.deleteAll(ticketRepository.findAllByAttractionId(attractionId));
+        attractionRepository.deleteById(attractionId);
+    }
+
+
 }
