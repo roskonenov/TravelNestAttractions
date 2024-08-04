@@ -1,4 +1,4 @@
-package bg.softuni.travelNestAccount.model;
+package bg.softuni.travelNestAccount.model.entity;
 
 
 import bg.softuni.travelNestAccount.model.base.BaseEntityUuid;
@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -43,6 +45,9 @@ public class Attraction extends BaseEntityUuid {
     @Column(nullable = false)
     private boolean isPaid;
 
+    @OneToMany(mappedBy = "attraction")
+    private Set<Ticket> tickets;
+
     public Attraction(String title, CityEntity city, String address, BigDecimal price, String pictureUrl, String description, boolean isPaid) {
         setType(type);
         this.title = title;
@@ -52,5 +57,6 @@ public class Attraction extends BaseEntityUuid {
         this.pictureUrl = pictureUrl;
         this.description = description;
         this.isPaid = isPaid;
+        this.tickets = new HashSet<>();
     }
 }

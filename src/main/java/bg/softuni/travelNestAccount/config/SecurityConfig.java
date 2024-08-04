@@ -1,6 +1,7 @@
 package bg.softuni.travelNestAccount.config;
 
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -18,7 +19,9 @@ public class SecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
             "/attractions/cities",
-            "/attractions/list"
+            "/attractions/list",
+            "/attractions/details/**",
+            "attractions/tickets/**"
     };
 
     @Bean
@@ -28,6 +31,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize ->
                         authorize.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                 .requestMatchers(AUTH_WHITELIST).permitAll()
+                                .requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)

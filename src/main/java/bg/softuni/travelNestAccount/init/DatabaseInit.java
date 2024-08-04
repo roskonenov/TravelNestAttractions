@@ -1,7 +1,7 @@
 package bg.softuni.travelNestAccount.init;
 
-import bg.softuni.travelNestAccount.model.Attraction;
-import bg.softuni.travelNestAccount.model.CityEntity;
+import bg.softuni.travelNestAccount.model.entity.Attraction;
+import bg.softuni.travelNestAccount.model.entity.CityEntity;
 import bg.softuni.travelNestAccount.model.enums.City;
 import bg.softuni.travelNestAccount.repository.AttractionRepository;
 import bg.softuni.travelNestAccount.repository.CityRepository;

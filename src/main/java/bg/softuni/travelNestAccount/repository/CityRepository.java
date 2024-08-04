@@ -1,7 +1,7 @@
 package bg.softuni.travelNestAccount.repository;
 
 
-import bg.softuni.travelNestAccount.model.CityEntity;
+import bg.softuni.travelNestAccount.model.entity.CityEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

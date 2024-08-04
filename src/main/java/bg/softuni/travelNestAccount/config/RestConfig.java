@@ -16,13 +16,4 @@ public class RestConfig {
                 .defaultHeader("Authorization", "Client-ID " + imgurConfig.getKey())
                 .build();
     }
-
-    @Bean("myAccountRestClient")
-    public RestClient myAcountRestClient(TravelNestApiConfig travelNestApiConfig){
-        return RestClient
-                .builder()
-                .baseUrl(travelNestApiConfig.getBaseUrl())
-                .defaultHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .build();
-    }
 }

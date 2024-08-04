@@ -1,4 +1,4 @@
-package bg.softuni.travelNestAccount.model;
+package bg.softuni.travelNestAccount.model.entity;
 
 import bg.softuni.travelNestAccount.model.base.BaseEntityUuid;
 import jakarta.persistence.Column;

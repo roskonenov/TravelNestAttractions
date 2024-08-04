@@ -1,24 +1,24 @@
 package bg.softuni.travelNestAccount.web;
 
-import bg.softuni.travelNestAccount.dto.AttractionDTO;
+import bg.softuni.travelNestAccount.model.dto.AttractionDTO;
+import bg.softuni.travelNestAccount.model.dto.TicketDTO;
 import bg.softuni.travelNestAccount.model.enums.City;
-import bg.softuni.travelNestAccount.repository.CityRepository;
 import bg.softuni.travelNestAccount.service.AttractionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("attractions")
+@RequestMapping("/attractions")
 public class AttractionController {
 
-    private final CityRepository cityRepository;
     private final AttractionService attractionService;
 
 
@@ -32,5 +32,25 @@ public class AttractionController {
     @GetMapping("/list")
     public ResponseEntity<List<AttractionDTO>> getAttractions(){
         return ResponseEntity.ok(attractionService.getAllAttractions());
+    }
+
+    @GetMapping("/details/{uuid}")
+    public ResponseEntity<AttractionDTO> getAttractionDetails(@PathVariable("uuid") UUID attractionId){
+
+        return ResponseEntity.ok(attractionService.getById(attractionId));
+    }
+
+    @GetMapping("/tickets/{uuid}")
+    public ResponseEntity<TicketDTO> getTickets(@PathVariable("uuid") UUID attractionId,
+                                                @AuthenticationPrincipal UserDetails userDetails){
+        return ResponseEntity.ok(attractionService.getTickets(attractionId, userDetails));
+    }
+
+    @PostMapping("/details/{uuid}")
+    public void buyTickets(@PathVariable("uuid") UUID attractionId,
+                                                @RequestBody TicketDTO ticketDTO){
+
+        attractionService.buyTickets(attractionId, ticketDTO);
+
     }
 }
