@@ -2,6 +2,7 @@ package bg.softuni.travelNestAccount.init;
 
 import bg.softuni.travelNestAccount.model.entity.Attraction;
 import bg.softuni.travelNestAccount.model.entity.CityEntity;
+import bg.softuni.travelNestAccount.model.entity.Event;
 import bg.softuni.travelNestAccount.model.enums.City;
 import bg.softuni.travelNestAccount.repository.AttractionRepository;
 import bg.softuni.travelNestAccount.repository.CityRepository;
@@ -9,13 +10,18 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import javax.swing.text.DateFormatter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 @Component
@@ -24,7 +30,7 @@ public class DatabaseInit implements CommandLineRunner {
 
     private static final String ATTRACTIONS_INPUT_FILE_PATH = "src/main/resources/attractions.txt";
     
-    private static final String CAR_INPUT_FILE_PATH = "src/main/resources/static/car.txt";
+    private static final String EVENTS_INPUT_FILE_PATH = "src/main/resources/events.txt";
     
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseInit.class);
 
@@ -40,7 +46,7 @@ public class DatabaseInit implements CommandLineRunner {
 //        rolesInit();
 //        usersInit();
         attractionsInit();
-//        carInit();
+        eventsInit();
         LOGGER.info("DATABASE INITIATED!");
     }
 
@@ -101,17 +107,18 @@ public class DatabaseInit implements CommandLineRunner {
                     attractionRepository.saveAndFlush(createAttractionEntity(fields));
                 });
     }
-//
-//    private void carInit() throws IOException {
-//        if (carRepository.count() != 0) return;
-//
-//        Files.readAllLines(Path.of(CAR_INPUT_FILE_PATH))
-//                .forEach(line -> {
-//                    String[] fields = line.split("\\s+");
-//                    carRepository.saveAndFlush(createCarEntity(fields));
-//                });
-//    }
-//
+
+    private void eventsInit() throws IOException {
+        if (attractionRepository.count() !=
+        Files.readAllLines(Path.of(ATTRACTIONS_INPUT_FILE_PATH)).size()) return;
+
+        Files.readAllLines(Path.of(EVENTS_INPUT_FILE_PATH))
+                .forEach(line -> {
+                    String[] fields = line.split("\\s+");
+                    attractionRepository.saveAndFlush(createEventEntity(fields));
+                });
+    }
+
     private Attraction createAttractionEntity(String[] fields) {
         return new Attraction(
                 getProperString(fields[0]),
@@ -124,20 +131,23 @@ public class DatabaseInit implements CommandLineRunner {
                 Boolean.parseBoolean(fields[6])
         );
     }
-//
-//    private Car createCarEntity(String[] fields) {
-//        return new Car(
-//                cityRepository.findByName(getPropperString(fields[0])),
-//                getPropperString(fields[1]),
-//                BigDecimal.valueOf(Integer.parseInt(fields[2])),
-//                fields[3],
-//                userRepository.findByUsername(fields[4]).get(),
-//                fields[5],
-//                fields[6],
-//                Engine.valueOf(fields[7]),
-//                Integer.parseInt(fields[8]));
-//    }
-//
+
+    private Attraction createEventEntity(String[] fields) {
+        return new Event(
+                getProperString(fields[0]),
+                cityRepository.findByName(getProperString(fields[1])),
+                getProperString(fields[2]),
+                fields[3].equals("null") ? null :
+                        BigDecimal.valueOf(Integer.parseInt(fields[3])),
+                fields[4],
+                getProperString(fields[5]),
+                Boolean.parseBoolean(fields[6]),
+                LocalDate.parse(fields[7], DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                LocalDate.parse(fields[8], DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                LocalTime.parse(fields[9], DateTimeFormatter.ofPattern("HH:mm"))
+        );
+    }
+
     private static String getProperString(String text) {
         return text.replaceAll("_", " ");
     }

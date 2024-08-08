@@ -17,9 +17,8 @@ import java.util.Set;
 @Entity
 @Table(name = "attractions")
 @DiscriminatorColumn(name = "type")
+@DiscriminatorValue(value = "attraction")
 public class Attraction extends BaseEntityUuid {
-
-    private static final String Type = "LOCAL_ATTRACTION";
 
     @Column(insertable = false, updatable = false)
     private String type;
@@ -48,8 +47,15 @@ public class Attraction extends BaseEntityUuid {
     @OneToMany(mappedBy = "attraction")
     private Set<Ticket> tickets;
 
-    public Attraction(String title, CityEntity city, String address, BigDecimal price, String pictureUrl, String description, boolean isPaid) {
-        setType(type);
+    public Attraction(
+            String title,
+            CityEntity city,
+            String address,
+            BigDecimal price,
+            String pictureUrl,
+            String description,
+            boolean isPaid
+    ) {
         this.title = title;
         this.city = city;
         this.address = address;
@@ -63,5 +69,9 @@ public class Attraction extends BaseEntityUuid {
     public Attraction setCity(CityEntity city) {
         this.city = city;
         return this;
+    }
+
+    public String getType() {
+        return this.getClass().getAnnotation(DiscriminatorValue.class).value();
     }
 }

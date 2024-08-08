@@ -18,10 +18,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
-            "/attractions/cities",
-            "/attractions/list",
-            "/attractions/details/**",
-            "attractions/tickets/**"
+            "/attraction/cities",
+            "/attraction/list",
+            "/attraction/details/**",
+            "/attraction/tickets/**",
+            "/event/cities",
+            "/event/list",
+            "/event/details/**",
+            "/event/tickets/**"
     };
 
     @Bean

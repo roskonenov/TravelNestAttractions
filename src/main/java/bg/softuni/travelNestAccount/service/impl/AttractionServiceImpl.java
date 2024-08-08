@@ -4,6 +4,7 @@ import bg.softuni.travelNestAccount.exception.ObjectNotFoundException;
 import bg.softuni.travelNestAccount.model.dto.AttractionDTO;
 import bg.softuni.travelNestAccount.model.dto.TicketDTO;
 import bg.softuni.travelNestAccount.model.entity.Attraction;
+import bg.softuni.travelNestAccount.model.entity.Event;
 import bg.softuni.travelNestAccount.model.entity.Ticket;
 import bg.softuni.travelNestAccount.repository.AttractionRepository;
 import bg.softuni.travelNestAccount.repository.CityRepository;
@@ -26,10 +27,10 @@ public class AttractionServiceImpl implements AttractionService {
     private final CityRepository cityRepository;
 
     @Override
-    public List<AttractionDTO> getAllAttractions() {
+    public List<AttractionDTO> getAllAttractions(String attractionType) {
         return attractionRepository.findAll()
                 .stream()
-                .filter(attraction -> attraction.getType().equals("Attraction"))
+                .filter(attraction -> attraction.getType().equals(attractionType))
                 .map(attraction -> {
                     AttractionDTO map = modelMapper.map(attraction, AttractionDTO.class);
                     map.setCityName(attraction.getCity().getName());
@@ -70,12 +71,18 @@ public class AttractionServiceImpl implements AttractionService {
     }
 
     @Override
-    public AttractionDTO createAttraction(AttractionDTO attractionDTO) {
-        Attraction attraction = attractionRepository.saveAndFlush(
-                modelMapper.map(attractionDTO, Attraction.class)
-                        .setCity(cityRepository.findByName(attractionDTO.getCityName())));
+    public AttractionDTO createAttraction(AttractionDTO attractionDTO, String attractionType) {
 
-        return modelMapper.map(attraction, AttractionDTO.class)
+        Attraction attraction = modelMapper.map(attractionDTO,
+                "attraction".equals(attractionType) ?
+                        Attraction.class :
+                        Event.class);
+
+        Attraction savedAttraction = attractionRepository
+                .saveAndFlush(attraction.setCity(
+                        cityRepository.findByName(attractionDTO.getCityName())));
+
+        return modelMapper.map(savedAttraction, AttractionDTO.class)
                 .setCityName(attraction.getCity().getName());
     }
 

@@ -16,52 +16,52 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/attractions")
 public class AttractionController {
 
     private final AttractionService attractionService;
 
 
-    @GetMapping("/cities")
+    @GetMapping("/attraction/cities")
     public ResponseEntity<List<String>> getCities(){
         return ResponseEntity.ok(Arrays.stream(City.values())
                 .map(City::toString)
                 .toList());
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<List<AttractionDTO>> getAttractions(){
-        return ResponseEntity.ok(attractionService.getAllAttractions());
+    @GetMapping("/{attraction-type}/list")
+    public ResponseEntity<List<AttractionDTO>> getAttractions(@PathVariable("attraction-type") String attractionType){
+        return ResponseEntity.ok(attractionService.getAllAttractions(attractionType));
     }
 
-    @GetMapping("/details/{uuid}")
+    @GetMapping("/attraction/details/{uuid}")
     public ResponseEntity<AttractionDTO> getAttractionDetails(@PathVariable("uuid") UUID attractionId){
 
         return ResponseEntity.ok(attractionService.getById(attractionId));
     }
 
-    @GetMapping("/tickets/{uuid}")
+    @GetMapping("/attraction/tickets/{uuid}")
     public ResponseEntity<TicketDTO> getTickets(@PathVariable("uuid") UUID attractionId,
                                                 @AuthenticationPrincipal UserDetails userDetails){
         return ResponseEntity.ok(attractionService.getTickets(attractionId, userDetails));
     }
 
-    @PostMapping("/details/{uuid}")
+    @PostMapping("/attraction/details/{uuid}")
     public void buyTickets(@PathVariable("uuid") UUID attractionId,
-                                                @RequestBody TicketDTO ticketDTO){
+                           @RequestBody TicketDTO ticketDTO){
 
         attractionService.buyTickets(attractionId, ticketDTO);
 
     }
 
-    @PostMapping("/add")
+    @PostMapping("/{attraction-type}/add")
     public ResponseEntity<AttractionDTO> addAttraction(
+            @PathVariable("attraction-type") String attractionType,
             @RequestBody AttractionDTO attractionDTO
     ){
-        return ResponseEntity.ok(attractionService.createAttraction(attractionDTO));
+        return ResponseEntity.ok(attractionService.createAttraction(attractionDTO, attractionType));
     }
 
-    @DeleteMapping("/delete/{uuid}")
+    @DeleteMapping("/attraction/delete/{uuid}")
     public ResponseEntity<AttractionDTO> deleteAttraction(@PathVariable("uuid") UUID attractionId,
                                                           @AuthenticationPrincipal UserDetails userDetails){
         attractionService.deleteById(attractionId, userDetails);

@@ -2,7 +2,6 @@ package bg.softuni.travelNestAccount.service;
 
 import bg.softuni.travelNestAccount.model.dto.AttractionDTO;
 import bg.softuni.travelNestAccount.model.dto.TicketDTO;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.UUID;
 
 public interface AttractionService {
 
-    List<AttractionDTO> getAllAttractions();
+    List<AttractionDTO> getAllAttractions(String attractionType);
 
     AttractionDTO getById(UUID attractionId);
 
@@ -18,7 +17,7 @@ public interface AttractionService {
 
     void buyTickets(UUID attractionId, TicketDTO ticketDTO);
 
-    AttractionDTO createAttraction(AttractionDTO attractionDTO);
+    AttractionDTO createAttraction(AttractionDTO attractionDTO, String attractionType);
 
     void deleteById(UUID attractionId, UserDetails userDetails);
 }
