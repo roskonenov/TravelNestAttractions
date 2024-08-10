@@ -18,7 +18,7 @@ public class AttractionDTO {
 
     private String title;
 
-    private String cityName;
+    private String city;
 
     private String address;
 
@@ -36,8 +36,8 @@ public class AttractionDTO {
 
     private LocalTime time;
 
-    public AttractionDTO setCityName(String cityName) {
-        this.cityName = cityName;
+    public AttractionDTO setCity(String city) {
+        this.city = city;
         return this;
     }
 }

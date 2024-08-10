@@ -33,7 +33,7 @@ public class AttractionServiceImpl implements AttractionService {
                 .filter(attraction -> attraction.getType().equals(attractionType))
                 .map(attraction -> {
                     AttractionDTO map = modelMapper.map(attraction, AttractionDTO.class);
-                    map.setCityName(attraction.getCity().getName());
+                    map.setCity(attraction.getCity().getName().replaceAll("\\s+", "."));
                     return map;
                 }).toList();
 
@@ -45,7 +45,7 @@ public class AttractionServiceImpl implements AttractionService {
                 .findById(attractionId)
                 .map(attraction -> {
                     AttractionDTO map = modelMapper.map(attraction, AttractionDTO.class);
-                    map.setCityName(attraction.getCity().getName());
+                    map.setCity(attraction.getCity().getName().replaceAll("\\s+", "."));
                     return map;
                 }).orElseThrow(ObjectNotFoundException::new);
     }
@@ -80,10 +80,10 @@ public class AttractionServiceImpl implements AttractionService {
 
         Attraction savedAttraction = attractionRepository
                 .saveAndFlush(attraction.setCity(
-                        cityRepository.findByName(attractionDTO.getCityName())));
+                        cityRepository.findByName(attractionDTO.getCity().replaceAll("\\.", " "))));
 
         return modelMapper.map(savedAttraction, AttractionDTO.class)
-                .setCityName(attraction.getCity().getName());
+                .setCity(attraction.getCity().getName().replaceAll("\\.", " "));
     }
 
     @Override
