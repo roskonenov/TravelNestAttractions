@@ -10,11 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import javax.swing.text.DateFormatter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
@@ -43,8 +41,6 @@ public class DatabaseInit implements CommandLineRunner {
     @Override
     public void run(String... args) throws IOException {
         cityInit();
-//        rolesInit();
-//        usersInit();
         attractionsInit();
         eventsInit();
         LOGGER.info("DATABASE INITIATED!");
@@ -62,42 +58,7 @@ public class DatabaseInit implements CommandLineRunner {
                     .forEach(newCity -> cityRepository.saveAndFlush(new CityEntity(newCity)) );
         }
     }
-//
-//    private void rolesInit() {
-//        if (roleRepository.count() != Arrays.stream(RoleEnum.values()).count()) {
-//
-//                    Arrays.stream(RoleEnum.values())
-//                            .map(RoleEnum::toString)
-//                            .filter(role -> !roleRepository.findAll()
-//                                    .stream()
-//                                    .map(Role::getRole)
-//                                    .map(RoleEnum::toString)
-//                                    .toList().contains(role))
-//                            .forEach(role -> roleRepository.saveAndFlush(new Role(RoleEnum.valueOf(role))));
-//        }
-//    }
-//
-//    private void usersInit() {
-//        if (userRepository.count() != 0) return;
-//
-//        userRepository.saveAllAndFlush(List.of(
-//                new User("roskonenov",
-//                        "roskonenov@gmail.com",
-//                        passwordEncoder.encode(initConfig.getPassword()))
-//                        .setRoles(List.of(roleRepository.findByRole(RoleEnum.ADMIN))),
-//
-//                new User("elena_jelyazkova",
-//                        "elena_jelyazkova@gmail.com",
-//                        passwordEncoder.encode(initConfig.getPassword()))
-//                        .setRoles(List.of(roleRepository.findByRole(RoleEnum.USER))),
-//
-//                new User("georgi79",
-//                        "georgi79@gmail.com",
-//                        passwordEncoder.encode(initConfig.getPassword()))
-//                        .setRoles(List.of(roleRepository.findByRole(RoleEnum.USER))))
-//        );
-//    }
-//
+
     private void attractionsInit() throws IOException {
         if (attractionRepository.count() != 0) return;
 
