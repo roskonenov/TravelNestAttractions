@@ -1,9 +1,9 @@
 
-# Travel Nest Account Microservice
+# Travel Nest Attractions Microservice
 
 ## Overview
 
-Travel Nest Account is a **microservice** that provides functionalities for managing attractions and user ticketing related to the main **Travel Nest** application. This service is responsible for handling the backend operations, such as retrieving information about attractions, managing tickets, and providing security features like JWT-based user authentication.
+Travel Nest Attractions is a **microservice** that provides functionalities for managing attractions and user ticketing related to the main **Travel Nest** application. This service is responsible for handling the backend operations, such as retrieving information about attractions, managing tickets, and providing security features like JWT-based user authentication.
 
 It operates as a helper service and is integrated into the larger Travel Nest ecosystem, allowing it to serve the necessary data and facilitate user interactions for the Travel Nest platform.
 
@@ -33,10 +33,10 @@ It operates as a helper service and is integrated into the larger Travel Nest ec
 ## Setup Instructions
 
 ### Step 1: Clone the Repository
-Clone the Travel Nest Account repository to your local machine:
+Clone the Travel Nest Attractions repository to your local machine:
 
 ```bash
-git clone https://github.com/your-username/travel-nest-account.git
+git clone https://github.com/your-username/travel-nest-attractions.git
 ```
 
 ### Step 2: Setup Environment Variables
