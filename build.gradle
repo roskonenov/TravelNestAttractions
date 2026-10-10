@@ -7,9 +7,7 @@ plugins {
 group = 'bg.softuni.travelNestAccount'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+	sourceCompatibility = '17'
 }
 
 repositories {
